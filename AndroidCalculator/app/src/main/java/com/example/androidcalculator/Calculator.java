@@ -144,10 +144,6 @@ public class Calculator extends AppCompatActivity{
     }
 
 
-/*    public static void main(String[] args) {
-        calculate("1","2","+");
-    }*/
-
     //calculate
     public static String calculate(String first_num, String second_num, String operator)  {
         String url = "http://localhost:8080/test/Calculator?";
@@ -165,52 +161,11 @@ public class Calculator extends AppCompatActivity{
                 e.printStackTrace();
             }
         return "";
-
-
-/*
-
-        double num1 = Double.parseDouble(first_num);
-        double num2 = Double.parseDouble(second_num);
-        double sum = 0;
-        if (operator.equals("+")) {
-            sum = num1 + num2;
-        }
-        if (operator.equals("-")) {
-            sum = num1 - num2;
-        }
-        if (operator.equals("×")) {
-            sum = num1 * num2;
-        }
-        if (operator.equals("÷")) {
-            sum = num1 / num2;
-        }
-        return doubleTrans(sum);*/
     }
 
     //when the num behind point is 0, just show the num. 3.0 shows 3
     public static String doubleTrans(double num)
     {
-/*        int m;
-        int n;
-        String str = String.valueOf(num);
-        String[] strlist = str.split("\\.");
-
-        if(strlist.length < 2){
-            if(str.length() <= 9){
-                return String.valueOf((long)num);
-            } else {
-                return String.format("%.3E",num);
-            }
-        } else {
-            m = strlist[0].length();
-            n = strlist[1].length();
-            if(m < 9){
-                String result = strlist[0] + "." + strlist[1].substring(0,9-m);
-                return result;
-            } else {
-                return String.format("%.3E",num);
-            }
-        }*/
         if(num % 1.0 == 0){
             return String.valueOf((long)num);
         }
