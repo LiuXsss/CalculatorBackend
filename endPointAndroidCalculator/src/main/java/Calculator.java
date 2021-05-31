@@ -15,11 +15,10 @@ public class Calculator extends HttpServlet {
         String operator = request.getParameter("operator").replace(" ","+");
 
         String result = calculate(num1,num2,operator);
-        // Actual logic goes here.
+        
         PrintWriter out = response.getWriter();
         System.out.println(num1 + operator + num2 + "="+result);
-        out.println("<h1>" + num1 + operator + num2 + "="+result +"</h1>");
-        out.println("<p>"+ new Date().toString() +"</p>");
+        out.println(result);
     }
 
     public static String calculate(String first_num, String second_num, String operator) {
