@@ -1,17 +1,15 @@
 package com.example.androidcalculator;
 
-import android.util.Log;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-
-import static android.provider.ContactsContract.CommonDataKinds.Website.URL;
+import java.util.concurrent.CompletableFuture;
 
 public class Calculator extends AppCompatActivity{
 
@@ -106,9 +104,9 @@ public class Calculator extends AppCompatActivity{
                         if(first_num.equals("")){
                             first_num = second_num;
                         } else {
-                            String result = calculate(first_num,second_num,operator);
-                            first_num = result;
-                            showText.setText("" + result);
+                            CompletableFuture<String> cf = new CompletableFuture<>();
+                            cf.supplyAsync(() -> {first_num = calculate(first_num,second_num,operator);
+                                showText.setText("" + first_num); return 0;});
                         }
                         StateChange = true;
                     }
@@ -117,15 +115,18 @@ public class Calculator extends AppCompatActivity{
                 case R.id.bt_equal:
 
                     if(StateChange){
-                        String result = calculate(first_num,second_num,operator);
-                        first_num = result;
-                        showText.setText("" + result);
+                        CompletableFuture<String> cf = new CompletableFuture<>();
+                        cf.supplyAsync(() -> {first_num = calculate(first_num,second_num,operator);
+                            showText.setText("" + first_num); return 0;});
+                        //String result = calculate(first_num,second_num,operator);
+                        //first_num = result;
+                        //showText.setText("" + result);
                     } else {
                         second_num = showText.getText().toString();
                         if(!operator.equals("")){
-                            String result = calculate(first_num,second_num,operator);
-                            first_num = result;
-                            showText.setText("" + result);
+                            CompletableFuture<String> cf = new CompletableFuture<>();
+                            cf.supplyAsync(() -> {first_num = calculate(first_num,second_num,operator);
+                                showText.setText("" + first_num); return 0;});
                         }
                         StateChange = true;
                     }
@@ -145,8 +146,8 @@ public class Calculator extends AppCompatActivity{
 
 
     //calculate
-    public static String calculate(String first_num, String second_num, String operator)  {
-        String url = "http://localhost:8080/test/Calculator?";
+    public String calculate(String first_num, String second_num, String operator)  {
+        String url = "http://10.0.2.2:8080/test/Calculator?";
         url += "num1=" + first_num;
         url += "&num2=" + second_num;
         url += "&operator=" + operator;
@@ -155,12 +156,34 @@ public class Calculator extends AppCompatActivity{
             Request request = new Request.Builder()
                     .url(url)
                     .build();
+        System.out.println("====line162====");
         try (Response response = client.newCall(request).execute()) {
+            this.showText.setText("" + first_num);
                 return response.body().string();
             } catch (Exception e){
                 e.printStackTrace();
             }
         return "";
+
+
+/* put these code to endpoint
+
+        double num1 = Double.parseDouble(first_num);
+        double num2 = Double.parseDouble(second_num);
+        double sum = 0;
+        if (operator.equals("+")) {
+            sum = num1 + num2;
+        }
+        if (operator.equals("-")) {
+            sum = num1 - num2;
+        }
+        if (operator.equals("×")) {
+            sum = num1 * num2;
+        }
+        if (operator.equals("÷")) {
+            sum = num1 / num2;
+        }
+        return doubleTrans(sum);*/
     }
 
     //when the num behind point is 0, just show the num. 3.0 shows 3
